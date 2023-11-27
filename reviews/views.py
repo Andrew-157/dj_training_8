@@ -6,23 +6,20 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic.base import TemplateView
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormView
 
 from .forms import ReviewForm
 from .models import Review
 
 
-class ReviewView(View):
+class ReviewView(FormView):
+    form_class = ReviewForm
+    template_name = 'reviews/review.html'
+    success_url = '/thank-you'
 
-    def get(self, request: HttpRequest):
-        form = ReviewForm()
-        return render(request, 'reviews/review.html', {'form': form})
-
-    def post(self, request: HttpRequest):
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect('/thank-you')
-        return render(request, 'reviews/review.html', {'form': form})
+    def form_valid(self, form: Any) -> HttpResponse:
+        form.save()
+        return super().form_valid(form)
 
 
 class ThankYouView(TemplateView):
