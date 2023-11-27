@@ -1,7 +1,7 @@
 from typing import Any
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.views.generic.base import TemplateView
 
@@ -38,4 +38,15 @@ class ReviewsListView(TemplateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['reviews'] = Review.objects.all()
+        return context
+
+
+class SingleReviewView(TemplateView):
+    template_name = 'reviews/single_review.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        review_id = kwargs['id']
+        selected_review = Review.objects.get(pk=review_id)
+        context['review'] = selected_review
         return context
