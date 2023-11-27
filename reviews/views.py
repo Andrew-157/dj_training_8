@@ -1,6 +1,7 @@
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
+from django.views.generic.base import TemplateView
 
 from .forms import ReviewForm
 
@@ -19,5 +20,5 @@ class ReviewView(View):
         return render(request, 'reviews/review.html', {'form': form})
 
 
-def thank_you(request: HttpRequest) -> HttpResponse:
-    return render(request, 'reviews/thank_you.html')
+class ThankYouView(TemplateView):
+    template_name = 'reviews/thank_you.html'
